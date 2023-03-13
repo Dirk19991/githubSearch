@@ -12,8 +12,6 @@ async function search(repName) {
 
     const res = await response.json();
 
-    console.log(res);
-
     return res.items.slice(0, 10);
   } catch (error) {
     console.log(error);
@@ -31,8 +29,6 @@ function getData(form) {
 
 async function formHandler(form) {
   const data = getData(form);
-
-  console.log(data.name);
 
   if (!data.name) {
     name.insertAdjacentHTML(
@@ -81,7 +77,6 @@ async function formHandler(form) {
       `
     );
   });
-  console.log(repos);
 }
 
 name.addEventListener('keydown', (e) => {
