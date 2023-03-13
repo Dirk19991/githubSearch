@@ -4,19 +4,17 @@ const form = document.querySelector('.form');
 const name = document.querySelector('.name');
 const searchResults = document.querySelector('.search-results');
 
-const octokit = new Octokit({
-  auth: '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',
-});
-
 async function search(repName) {
   try {
-    const response = await octokit.request('GET /search/repositories', {
-      q: repName,
-      org: 'octokit',
-      type: 'private',
-    });
+    const response = await fetch(
+      `https://api.github.com/search/repositories?q=${repName}`
+    );
 
-    return response.data.items.slice(0, 10);
+    const res = await response.json();
+
+    console.log(res);
+
+    return res.items.slice(0, 10);
   } catch (error) {
     console.log(error);
   }
