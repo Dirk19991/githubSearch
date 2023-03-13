@@ -4,13 +4,17 @@
   box-sizing: border-box;
 }
 
-.comment-box {
-  width: 500px;
+body {
+  margin-bottom: 40px;
+}
+
+.search-box {
+  max-width: 500px;
   margin: 0 auto;
   margin-top: 40px;
 }
 
-.comment-box h2 {
+.search-box h2 {
   font-size: 20px;
   margin-bottom: 15px;
 }
@@ -22,8 +26,7 @@
   gap: 20px;
 }
 
-.name,
-.date {
+.name {
   width: 100%;
   height: 50px;
   padding: 0 20px;
@@ -31,8 +34,7 @@
   border: 1px solid rgb(15, 122, 122);
 }
 
-.name:focus,
-.date:focus {
+.name:focus {
   border: 1px solid black;
   outline: 0;
 }
@@ -45,29 +47,12 @@
   top: 50px;
 }
 
-.date::-webkit-calendar-picker-indicator {
-  cursor: pointer;
-}
-
-.comment {
-  width: 100%;
-  height: 100px;
-  padding: 15px 20px;
-  border-radius: 5px;
-  border: 1px solid rgb(15, 122, 122);
-}
-
-.comment:focus {
-  border: 1px solid black;
-  outline: 0;
-}
-
-.comment-error {
+.search-results__error {
   position: absolute;
   color: red;
   font-size: 12px;
-  left: 20px;
-  top: 240px;
+  left: 0px;
+  top: 25px;
 }
 
 .button {
@@ -84,8 +69,9 @@
   background: rgb(11, 97, 97);
 }
 
-.user-comments {
-  width: 500px;
+.search-results {
+  position: relative;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -93,60 +79,26 @@
   margin-top: 15px;
 }
 
-.user-comments h2 {
+.search-results h2 {
   font-size: 20px;
+  margin-bottom: 20px;
 }
 
-.user-comment {
+.list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  word-wrap: break-word;
-  width: 100%;
+  gap: 50px;
+}
+
+.list > li {
   min-height: 100px;
-  padding: 15px 20px;
-  border-radius: 5px;
-  border: 1px solid rgb(15, 122, 122);
 }
 
-.user-comment__name {
+li::marker {
+  transform: translate(-20px);
+}
+
+.bold {
+  font-size: 20px;
   font-weight: 700;
-}
-
-.user-comment__date {
-  font-size: 12px;
-  color: grey;
-}
-
-.user-data {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.user-comment__icons {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 5px;
-}
-
-.user-comment__iconContainer {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
-
-.user-comment__iconContainer > img {
-  width: 100%;
-  height: 100%;
-}
-
-.like > img {
-  filter: contrast(0.7);
-}
-
-.liked > img {
-  filter: contrast(2.5);
 }

@@ -6,28 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script type="module" defer src="main.js"></script>
+
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="comment-box">
-      <h2>Оставить комментарий</h2>
+    <div class="search-box">
+      <h2>Поиск по GitHub</h2>
       <form class="form" action="#">
-        <input class="name" type="text" name="name" placeholder="Введите имя" />
-        <input class="date" type="date" name="date" id="date" />
-
-        <textarea
-          class="comment"
-          name="comment"
-          id="comment"
-          cols="40"
-          rows="5"
-          placeholder="Введите комментарий"
-        ></textarea>
-        <input class="button" type="submit" value="Отправить" />
+        <input
+          class="name"
+          type="text"
+          name="name"
+          placeholder="Введите название репозитория"
+        />
+        <input class="button" type="submit" value="Искать" />
       </form>
     </div>
-    <div class="user-comments">
-      <h2>Комментарии</h2>
+    <div class="search-results">
+      <h2 class="search-results__header">Результаты</h2>
+      <ol class="list">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ol>
     </div>
   </body>
 </html>

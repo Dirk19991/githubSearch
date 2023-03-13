@@ -1,10 +1,26 @@
-import trash from './assets/trash.svg';
-import heart from './assets/heart.svg';
+import { Octokit } from '@octokit/core';
 
 const form = document.querySelector('.form');
 const name = document.querySelector('.name');
-const comment = document.querySelector('.comment');
-const userComments = document.querySelector('.user-comments');
+const searchResults = document.querySelector('.search-results');
+
+const octokit = new Octokit({
+  auth: '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',
+});
+
+async function search(repName) {
+  try {
+    const response = await octokit.request('GET /search/repositories', {
+      q: repName,
+      org: 'octokit',
+      type: 'private',
+    });
+
+    return response.data.items.slice(0, 10);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 function getData(form) {
   var formData = new FormData(form);
@@ -15,117 +31,71 @@ function getData(form) {
   return obj;
 }
 
-function isYesterday(date) {
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-
-  return (
-    date.getDate() === yesterday.getDate() &&
-    date.getMonth() === yesterday.getMonth() &&
-    date.getFullYear() === yesterday.getFullYear()
-  );
-}
-
-function getDateString(date) {
-  if (date.toLocaleDateString() === new Date().toLocaleDateString()) {
-    return `сегодня, ${new Date()
-      .getHours()
-      .toString()
-      .padStart(2, '0')}:${new Date()
-      .getMinutes()
-      .toString()
-      .padStart(2, '0')}`;
-  }
-
-  if (isYesterday(date)) {
-    return 'вчера, 18:39';
-  }
-
-  return date.toLocaleDateString();
-}
-
-function formHandler(form) {
+async function formHandler(form) {
   const data = getData(form);
 
-  if (!data.name || !data.comment) {
-    if (!data.name) {
-      name.insertAdjacentHTML(
-        'afterend',
-        `<div class='name-error'>
-          Обязательное поле
-          </div>`
-      );
-    }
+  console.log(data.name);
 
-    if (!data.comment) {
-      comment.insertAdjacentHTML(
-        'afterend',
-        `<div class='comment-error'>
-          Обязательное поле
-          </div>`
-      );
-    }
-
+  if (!data.name) {
+    name.insertAdjacentHTML(
+      'afterend',
+      `<div class='name-error'>
+        Обязательное поле
+        </div>`
+    );
     return;
   }
-  let dateString = getDateString(new Date(data.date || Date.now()));
 
-  userComments.insertAdjacentHTML(
-    'beforeend',
-    `
-    <div class='user-comment'>
-      <div class='user-data'>
-        <div class='user-comment__name'>${data.name}</div>
-        <div class='user-comment__date'>${dateString}</div>
-       </div>
-       <div class='user-comment__text'>${data.comment}</div>
-       <div class='user-comment__icons'>
-       <div class='user-comment__iconContainer like'>
-       <img src=${heart} alt="heart">
-       </div>
-       <div class='user-comment__iconContainer trash'>
-       <img src=${trash} alt="trash">
-       </div>
-       
-       </div>
-    </div>
-  `
-  );
-
-  const trashIcons = document.querySelectorAll('.trash');
-  trashIcons.forEach((icon) => {
-    icon.addEventListener('click', () => {
-      icon.closest('.user-comment').remove();
-    });
-  });
-
-  const likeIcons = document.querySelectorAll('.like');
-  likeIcons.forEach((icon) => {
-    if (icon.classList.contains('visited')) {
-      return;
-    }
-    icon.classList.add('visited');
-    icon.addEventListener('click', () => {
-      icon.classList.toggle('liked');
-    });
-  });
+  if (data.name.length < 2) {
+    name.insertAdjacentHTML(
+      'afterend',
+      `<div class='name-error'>
+        Минимальное число символов - 2
+        </div>`
+    );
+    return;
+  }
 
   form.reset();
+  const repos = await search(data.name);
+
+  if (repos.length === 0) {
+    searchResults.insertAdjacentHTML(
+      'beforeend',
+      `<div class='search-results__error'>Ничего не найдено</div>`
+    );
+  }
+  const listItems = document.querySelectorAll('li');
+
+  listItems.forEach((item) => {
+    item.innerHTML = '';
+  });
+
+  listItems.forEach((item, index) => {
+    if (!repos[index]) {
+      return;
+    }
+    item.insertAdjacentHTML(
+      'beforeend',
+      `<h2><a target="_blank"  href=${repos[index].svn_url}>${repos[index].name}</a></h2>
+      <div><span class='bold'>Описание:</span> ${repos[index].description}</div>
+      <div><span class='bold'>Владелец:</span> ${repos[index].owner.login}</div>
+      `
+    );
+  });
+  console.log(repos);
 }
 
 name.addEventListener('keydown', (e) => {
   const nameError = document.querySelector('.name-error');
+  const resultsError = document.querySelector('.search-results__error');
 
   if (nameError) {
     nameError.remove();
   }
-});
 
-comment.addEventListener('keydown', (e) => {
-  const commentError = document.querySelector('.comment-error');
-
-  if (commentError) {
-    commentError.remove();
+  if (resultsError) {
+    resultsError.remove();
   }
 });
 
